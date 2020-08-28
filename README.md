@@ -8,3 +8,9 @@ The name of the algorithm comes from annealing in metallurgy, a technique involv
 # Installation
 ````
 git clone https://github.com/muratokutucu/Simulated-Annealing.git
+
+# Command
+````
+g++ -std=c++11 -O3 SimulatedAnnealing.cpp -o exe
+./exe
+````

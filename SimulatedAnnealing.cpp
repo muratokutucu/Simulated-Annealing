@@ -5,13 +5,11 @@
 #include <random>
 #include <cmath>
 #include <ctime>
-#include "sa.hpp"
+#include "SimulatedAnnealing.hpp"
 
 using namespace std;
 
-SimulatedAnnealing::SimulatedAnnealing(double temperature, double alpha, vector< pair<double, double> > constraints){
-	m_temperature = temperature;
-	m_alpha = alpha;
+SimulatedAnnealing::SimulatedAnnealing(vector< pair<double, double> > constraints){
 	m_constraints = constraints;
 }
 
@@ -40,16 +38,13 @@ vector<double> SimulatedAnnealing::getRandomNeighbor(vector<double> steps, vecto
 }
 
 double SimulatedAnnealing::evaluateScore(std::vector<double> values){
-	//here, in this example, the vector is only composed of the value of the parameter x
-	//let's say that the function that we want to optimize iz f(x) = x^2 and that we want the value of x that provides the greater f(x).
-	//So, the higher will be f(x) the higher must be the score. An obvious solution is simply to return the value of x^2.
 	double x = values[0];
 	double y = values[1];	
 	return sin(x)*cos(y)*x;
 }
 
-vector<double> SimulatedAnnealing::run(){
-	double T = m_temperature;
+vector<double> SimulatedAnnealing::run(double initialTemperature, double alpha){
+	double T = initialTemperature;
 	// definition of step for each parameter
 	vector<double> steps(m_constraints.size());
 	for(int i = 0; i < steps.size(); i++){
@@ -99,7 +94,7 @@ vector<double> SimulatedAnnealing::run(){
 		}
 
 		//reduce temperature
-		T *= 0.99;
+		T *= alpha;
 
 		//reduce each step/*
 		for(int i = 0; i < steps.size(); i++){
@@ -114,8 +109,8 @@ int main(void){
 	pair<double, double> y_range = make_pair(-7, 7);
 	vector< pair<double, double> > constraints {x_range, y_range};
 	
-	SimulatedAnnealing s(100.0, 0.99, constraints);
-	vector<double> result = s.run();
+	SimulatedAnnealing s(constraints);
+	vector<double> result = s.run(100, 0.99);
 	
 	cout << "Best result : ";
 	for(int i = 0; i < result.size(); i++){

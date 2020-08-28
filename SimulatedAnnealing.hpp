@@ -8,14 +8,12 @@
 
 class SimulatedAnnealing{
 private:
-	double m_temperature;
-	double m_alpha;
 	std::vector< std::pair<double, double> > m_constraints;
 
 public:
-	SimulatedAnnealing(double temperature, double alpha, std::vector< std::pair<double, double> > constraints);
+	SimulatedAnnealing(std::vector< std::pair<double, double> > constraints);
 	std::vector<double> getRandomNeighbor(std::vector<double> steps, std::vector<double> from);
-	std::vector<double> run(); 
+	std::vector<double> run(double initialTemperature, double alpha); 
 	double evaluateScore(std::vector<double> values);
 };
 
