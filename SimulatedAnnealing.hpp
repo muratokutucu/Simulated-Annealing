@@ -54,11 +54,11 @@ public:
 		best_score = score;
 
 		//Type of random number distribution
-	    std::uniform_real_distribution<double> dist(0.0, 1.0);  //(min, max)
-	    //Mersenne Twister: Good quality random number generator
-	    std::mt19937 rng; 
-	    //Initialize with non-deterministic seeds
-	    rng.seed(std::random_device{}()); 
+	        std::uniform_real_distribution<double> dist(0.0, 1.0);  //(min, max)
+	        //Mersenne Twister: Good quality random number generator
+	        std::mt19937 rng; 
+	        //Initialize with non-deterministic seeds
+	        rng.seed(std::random_device{}()); 
 
 		while (T > 1){
 			new_solution = getRandomNeighbor(steps, solution);
@@ -106,11 +106,11 @@ public:
 			double max = (expectedMax > max) ? max : expectedMax;
 			
 			//Type of random number distribution
-		    std::uniform_real_distribution<double> dist(min, max);  //(min, max)
-		    //Mersenne Twister: Good quality random number generator
-		    std::mt19937 rng; 
-		    //Initialize with non-deterministic seeds
-		    rng.seed(std::random_device{}()); 
+		        std::uniform_real_distribution<double> dist(min, max);  //(min, max)
+		        //Mersenne Twister: Good quality random number generator
+		        std::mt19937 rng; 
+		        //Initialize with non-deterministic seeds
+		        rng.seed(std::random_device{}()); 
 
 			res[i] = dist(rng); //neighboor
 		}
