@@ -6,5 +6,5 @@ The name of the algorithm comes from annealing in metallurgy, a technique involv
 [Wikipedia - Simulated Annealing](https://en.wikipedia.org/wiki/Simulated_annealing)
 
 # Installation
-
+````
 git clone https://github.com/muratokutucu/Simulated-Annealing.git
