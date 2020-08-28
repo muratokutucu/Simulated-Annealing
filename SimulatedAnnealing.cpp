@@ -9,15 +9,22 @@
 
 using namespace std;
 
-SimulatedAnnealing::SimulatedAnnealing(vector< pair<double, double> > constraints){
+/**
+ * 
+ * @param 
+ */
+SimulatedAnnealing::SimulatedAnnealing(vector<pair<double, double>> constraints){
 	m_constraints = constraints;
+	m_numberOfParameters = constraints.size();
 }
 
-//	std::vector<double> m_parametersWithOptimizedValues; 
-//	std::vector< std::pair<double, double> > m_parametersWithConstraints;
+/**
+ * 
+ * @param 
+ */
 vector<double> SimulatedAnnealing::getRandomNeighbor(vector<double> steps, vector<double> from){
-	vector<double> res(steps.size());
-	for(int i = 0; i < res.size(); i++){
+	vector<double> res(m_numberOfParameters);
+	for(int i = 0; i < m_numberOfParameters; i++){
 		double step = steps[i];
 		pair<double, double> range = m_constraints[i];
 		double low = range.first, high = range.second;
@@ -37,16 +44,15 @@ vector<double> SimulatedAnnealing::getRandomNeighbor(vector<double> steps, vecto
 	return res;
 }
 
-double SimulatedAnnealing::evaluateScore(std::vector<double> values){
-	double x = values[0];
-	double y = values[1];	
-	return sin(x)*cos(y)*x;
-}
-
-vector<double> SimulatedAnnealing::run(double initialTemperature, double alpha){
+/**
+ * 
+ * @param 
+ */
+template<typename Function>
+vector<double> SimulatedAnnealing::run(double initialTemperature, double alpha, Function evaluateScore){
 	double T = initialTemperature;
 	// definition of step for each parameter
-	vector<double> steps(m_constraints.size());
+	vector<double> steps(m_numberOfParameters);
 	for(int i = 0; i < steps.size(); i++){
 		pair<double, double> range = m_constraints[i];
 		double low = range.first, high = range.second;
@@ -54,11 +60,11 @@ vector<double> SimulatedAnnealing::run(double initialTemperature, double alpha){
 	}
 
 
-	vector<double> best_solution(m_constraints.size()), new_solution(m_constraints.size()), solution(m_constraints.size());
+	vector<double> best_solution(m_numberOfParameters), new_solution(m_numberOfParameters), solution(m_numberOfParameters);
 	double best_score, new_score, score;
 	
 	//generate a first random solution
-	for(int i = 0; i < m_constraints.size(); i++){
+	for(int i = 0; i < m_numberOfParameters; i++){
 		pair<double, double> range = m_constraints[i];
 		double low = range.first, high = range.second;
 		solution[i] = (abs(high) - abs(low))/2;
@@ -104,13 +110,25 @@ vector<double> SimulatedAnnealing::run(double initialTemperature, double alpha){
 	return best_solution;
 }
 
+/**
+ * 
+ * @param 
+ */
+double evaluateScore(vector<double> values){
+	double x = values[0];
+	double y = values[1];	
+	return sin(x)*cos(y)*x;
+}
+
+//g++ -std=c++11 -O3 SimulatedAnnealing.cpp -o exe
+//./exe
 int main(void){
 	pair<double, double> x_range = make_pair(-7, 7);
 	pair<double, double> y_range = make_pair(-7, 7);
-	vector< pair<double, double> > constraints {x_range, y_range};
+	vector<pair<double, double>> constraints {x_range, y_range};
 	
 	SimulatedAnnealing s(constraints);
-	vector<double> result = s.run(100, 0.99);
+	vector<double> result = s.run(100, 0.99, evaluateScore);
 	
 	cout << "Best result : ";
 	for(int i = 0; i < result.size(); i++){
