@@ -12,11 +12,20 @@ private:
 	std::vector<std::pair<double, double>> m_constraints;
 
 public:
+	/**
+	 * Constructor. Takes a vector containing the range of each parameter.
+	 * @param constraints - Range of each parameter of the problem. Example : {[xmin, xmax], [ymin, ymax], ...}
+	 */
 	SimulatedAnnealing(std::vector<std::pair<double, double>> constraints){
 		m_constraints = constraints;
 		m_numberOfParameters = constraints.size();
 	}
 
+	/**
+	 * Apply the simulated annealing algorithm in order to find the global optimum of the function 'evaluateScore' (passed as argument).
+	 * @param initialTemperature - initial temperature. Determined empirically. 
+	 * @param alpha - Temperature's decrease speed. Recommended value : 0.99
+	 */
 	template<typename Function>
 	std::vector<double> run(double initialTemperature, double alpha, Function evaluateScore){
 		double T = initialTemperature;
@@ -79,6 +88,11 @@ public:
 		return best_solution;
 	}
 
+	/**
+	 * Returns a neighbor solution.
+	 * @param steps - half length of search zone's. 
+	 * @param from - value of each parameter of current solution.
+	 */
 	std::vector<double> getRandomNeighbor(std::vector<double> steps, std::vector<double> from){
 		std::vector<double> res(m_numberOfParameters);
 		for(int i = 0; i < m_numberOfParameters; i++){
