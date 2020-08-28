@@ -10,8 +10,8 @@
 using namespace std;
 
 /**
- * 
- * @param 
+ * Constructor. Takes a vector containing the range of each parameter.
+ * @param constraints - Range of each parameter of the problem. Example : {[xmin, xmax], [ymin, ymax], ...}
  */
 SimulatedAnnealing::SimulatedAnnealing(vector<pair<double, double>> constraints){
 	m_constraints = constraints;
@@ -19,18 +19,21 @@ SimulatedAnnealing::SimulatedAnnealing(vector<pair<double, double>> constraints)
 }
 
 /**
- * 
- * @param 
+ * Returns a neighbor solution.
+ * @param steps - half length of search zone's. 
+ * @param from - value of each parameter of current solution.
  */
 vector<double> SimulatedAnnealing::getRandomNeighbor(vector<double> steps, vector<double> from){
 	vector<double> res(m_numberOfParameters);
 	for(int i = 0; i < m_numberOfParameters; i++){
 		double step = steps[i];
+		double expectedMin = from[i]-step;
+		double expectedMax = from[i]+step;
 		pair<double, double> range = m_constraints[i];
 		double low = range.first, high = range.second;
 
-		double min = (from[i]-step < low) ? low : from[i]-step;
-		double max = (from[i]+step > max) ? max : from[i]+step;
+		double min = (expectedMin < low) ? low : expectedMin;
+		double max = (expectedMax > max) ? max : expectedMax;
 		
 		//Type of random number distribution
 	    std::uniform_real_distribution<double> dist(min, max);  //(min, max)
@@ -45,8 +48,9 @@ vector<double> SimulatedAnnealing::getRandomNeighbor(vector<double> steps, vecto
 }
 
 /**
- * 
- * @param 
+ * Apply the simulated annealing algorithm in order to find the global optimum of the function 'evaluateScore' (passed as argument).
+ * @param initialTemperature - initial temperature. Determined empirically. 
+ * @param alpha - Temperature's decrease speed. Recommended value : 0.99
  */
 template<typename Function>
 vector<double> SimulatedAnnealing::run(double initialTemperature, double alpha, Function evaluateScore){
@@ -103,16 +107,16 @@ vector<double> SimulatedAnnealing::run(double initialTemperature, double alpha, 
 		T *= alpha;
 
 		//reduce each step/*
-		for(int i = 0; i < steps.size(); i++){
-			steps[i] *= 0.99;
+		for(int i = 0; i < m_numberOfParameters; i++){
+			steps[i] *= alpha;
 		}
 	}		
 	return best_solution;
 }
 
 /**
- * 
- * @param 
+ * Evaluates the score of the problem that we want to find the global optimum.
+ * @param values - values of each parameter of the problem.
  */
 double evaluateScore(vector<double> values){
 	double x = values[0];
@@ -122,13 +126,16 @@ double evaluateScore(vector<double> values){
 
 //g++ -std=c++11 -O3 SimulatedAnnealing.cpp -o exe
 //./exe
+
+//vector<double> result = s.run(100000000000, 0.99995, evaluateScore); -> 4,277 s
+//après amélioration : -> 
 int main(void){
 	pair<double, double> x_range = make_pair(-7, 7);
 	pair<double, double> y_range = make_pair(-7, 7);
 	vector<pair<double, double>> constraints {x_range, y_range};
 	
 	SimulatedAnnealing s(constraints);
-	vector<double> result = s.run(100, 0.99, evaluateScore);
+	vector<double> result = s.run(100000000000, 0.99995, evaluateScore);
 	
 	cout << "Best result : ";
 	for(int i = 0; i < result.size(); i++){
