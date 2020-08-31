@@ -8,30 +8,40 @@
 using namespace std;
 
 /**
-
  * Evaluates the score of the problem that we want to find the global optimum.
  * @param values - values of each parameter of the problem.
  */
 double evaluateScore(vector<double> values){
 	double x = values[0];
 	double y = values[1];	
-	return sin(x)*cos(y)*x;
+	//ackley function : https://en.wikipedia.org/wiki/Ackley_function
+	double pi = 3.14, e = 2.718;
+	double f = -20*exp(-0.2*sqrt(0.5*(x*x+y*y)))-exp(0.5*(cos(2*pi*x)+cos(2*pi*y)))+e+20;
+	return 1.0/f;
 }
 
-//g++ -std=c++11 -O3 main.cpp SimulatedAnnealing.cpp -o exe
-//./exe
+typedef pair<double, double> pdd;
+
 int main(void){
-	pair<double, double> x_range = make_pair(-7, 7);
-	pair<double, double> y_range = make_pair(-7, 7);
-	vector<pair<double, double>> constraints {x_range, y_range};
+	pdd x_range = make_pair(-2, 2);
+	pdd y_range = make_pair(-2, 2);
+	vector<pdd> constraints {x_range, y_range};
 	
 	SimulatedAnnealing s(constraints);
-	vector<double> result = s.run(100000000000, 0.99995, evaluateScore);
+	pair<vector<double>, vector<double>> result = s.run(evaluateScore, 100000, 0.9995, 10);
 	
-	cout << "Best result : ";
-	for(int i = 0; i < result.size(); i++){
-		cout << result[i] << " ";
+	cout << "Best result  : ";
+	for(int i = 0; i < result.first.size(); i++){
+		cout << result.first[i] << " ";
 	}
 	cout << endl;
+
+
+	cout << "Final result : ";
+	for(int i = 0; i < result.second.size(); i++){
+		cout << result.second[i] << " ";
+	}
+	cout << endl;
+
 	return 0;
 }
