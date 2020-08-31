@@ -68,7 +68,7 @@ public:
 		for(int i = 0; i < m_numberOfParameters; i++){
 			std::pair<double, double> range = m_constraints[i];
 			double low = range.first, high = range.second;
-			steps[i] = (abs(high) - abs(low));
+			steps[i] = abs(high - low)/4.0;
 		}
 
 		std::vector<double> best_solution(m_numberOfParameters), new_solution(m_numberOfParameters), solution(m_numberOfParameters);
@@ -95,7 +95,7 @@ public:
 		while (iteration--){
 			new_solution = getRandomNeighbor(steps, solution); 
 			new_score = evaluateScore(new_solution);
-
+			//std::cout << "x " << new_solution[0] << " step " << steps[0] << std::endl;
 			if(new_score > score){
 				solution = new_solution;
 				score = new_score;
