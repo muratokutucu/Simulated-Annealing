@@ -44,10 +44,9 @@ public:
 
 			double min = (expectedMin < low) ? low : expectedMin;
 			double max = (expectedMax > high) ? high : expectedMax;
-		    //std::cout << "from " << from[i] << " min " << min << " max " << std::endl;
-	        std::uniform_real_distribution<double> dist(min, max); //Type of random number distribution
-	        std::mt19937 rng; //Mersenne Twister: Good quality random number generator
-	        rng.seed(std::random_device{}()); //Initialize with non-deterministic seeds
+			std::uniform_real_distribution<double> dist(min, max); //Type of random number distribution
+			std::mt19937 rng; //Mersenne Twister: Good quality random number generator
+			rng.seed(std::random_device{}()); //Initialize with non-deterministic seeds
 
 			res[i] = dist(rng); //neighboor
 		}
@@ -56,8 +55,10 @@ public:
 
 	/**
 	 * Apply the simulated annealing algorithm in order to find the global optimum of the function 'evaluateScore' (passed as argument).
-	 * @param initialTemperature - initial temperature. Determined empirically. 
+	 * @param evaluateScore - fitness function.
+         * @param iteration - number of times that a new solution will be generated.
 	 * @param alpha - Temperature's decrease speed. Recommended value : 0.99
+	 * @param initialTemperature - initial temperature. Determined empirically. 
 	 */
 	template<typename Function>
 	std::pair<std::vector<double>, std::vector<double>> run(Function evaluateScore, uint64_t iteration, double alpha, double initialTemperature){
@@ -79,7 +80,7 @@ public:
 			std::pair<double, double> range = m_constraints[i];
 			double min = range.first, max = range.second;
 			std::uniform_real_distribution<double> dist(min, max);  
-       		std::mt19937 rng; 
+       			std::mt19937 rng; 
 			solution[i] = dist(rng);
 		}
 
