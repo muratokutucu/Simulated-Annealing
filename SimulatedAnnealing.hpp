@@ -88,9 +88,9 @@ public:
 		best_score = score;
 
 		//generator of 'double' between 0 and 1
-        std::uniform_real_distribution<double> dist(0.0, 1.0);
-        std::mt19937 rng; 
-        rng.seed(std::random_device{}()); 
+		std::uniform_real_distribution<double> dist(0.0, 1.0);
+		std::mt19937 rng; 
+		rng.seed(std::random_device{}()); 
 
 		while (iteration--){
 			new_solution = getRandomNeighbor(steps, solution); 
